@@ -1,0 +1,11 @@
+Dencent-AI-Termux/
+├── core/              # AI agent & reasoning engine
+├── network/           # P2P communication layer
+├── learning/          # Local learning & adaptation
+├── storage/           # Data persistence & integrity
+├── ui/                # Web UI with Tailwind
+├── rust/              # Performance-critical modules
+├── tests/             # Test suite
+├── docs/              # Comprehensive documentation
+├── config/            # Configuration files
+└── [Config files]
