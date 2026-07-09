@@ -1,0 +1,46 @@
+#!/bin/bash
+
+LOG_FILE="secure_ledger.txt"
+touch "$LOG_FILE"
+
+# Function to verify the ledger integrity
+verify_ledger() {
+    local prev_hash="00000000000000000000000000000000"
+    while IFS= read -r line; do
+        # Extract the stored hash and the content
+        local stored_hash=$(echo "$line" | cut -d' ' -f1)
+        local content=$(echo "$line" | cut -d' ' -f2-)
+        
+        # Calculate what the hash SHOULD be
+        local current_data="$prev_hash$content"
+        local calculated_hash=$(echo -n "$current_data" | sha256sum | cut -d' ' -f1)
+        
+        if [ "$stored_hash" != "$calculated_hash" ]; then
+            echo "!!! SPOLIATION DETECTED: Hash mismatch at line: $line"
+            return 1
+        fi
+        prev_hash="$stored_hash"
+    done < "$LOG_FILE"
+    echo "Ledger Integrity: Verified."
+}
+
+# Function to add a new entry
+add_entry() {
+    local entry="$1"
+    local last_line=$(tail -n 1 "$LOG_FILE" 2>/dev/null || echo "00000000000000000000000000000000")
+    local prev_hash=$(echo "$last_line" | cut -d' ' -f1)
+    
+    local new_hash=$(echo -n "$prev_hash$entry" | sha256sum | cut -d' ' -f1)
+    echo "$new_hash $entry" >> "$LOG_FILE"
+    echo "Entry added."
+}
+
+# Execution logic
+if [ "$1" == "--verify" ]; then
+    verify_ledger
+elif [ -n "$1" ]; then
+    add_entry "$1"
+else
+    echo "Usage: ./chain_log.sh 'Your entry' | ./chain_log.sh --verify"
+fi
+
