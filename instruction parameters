@@ -1,0 +1,244 @@
+// ==UserScript==
+// @name         Truth Ossifier
+// @namespace    http://tampermonkey.net/
+// @version      1.0
+// @description  Detects and logs subtle truth alterations on Facebook, Twitter, and Reddit.
+// @match        https://www.facebook.com/*
+// @match        https://twitter.com/*
+// @match        https://www.reddit.com/*
+// @grant        GM_xmlhttpRequest
+// @grant        GM_setValue
+// @grant        GM_getValue
+// @require      https://cdnjs.cloudflare.com/ajax/libs/diff_match_patch/20200803/diff_match_patch.min.js
+// ==/UserScript==
+
+(function() {
+    'use strict';
+
+    // --- CONFIG ---
+    const ALTERATION_THRESHOLD = 0.9; // 90% similarity = no alteration
+    const LEDGER_API = "https://your-public-ledger-api.example.com/log";
+    const FALSE_POSITIVE_API = "https://your-public-ledger-api.example.com/flag_false_positive";
+    const IPFS_GATEWAY = "https://ipfs.io/ipfs/";
+
+    // --- STATE ---
+    const originalPosts = new Map(); // { postId: { text, element, timestamp } }
+    const falsePositives = new Set(GM_getValue("falsePositives", []));
+
+    // --- DIFF UTILITY ---
+    function getDiff(original, altered) {
+        const dmp = new DiffMatchPatch();
+        const diffs = dmp.diff_main(original, altered);
+        dmp.diff_cleanupSemantic(diffs);
+        return diffs;
+    }
+
+    // --- VISUAL FEEDBACK ---
+    function highlightAlteration(postElement, original, altered) {
+        if (falsePositives.has(postElement.id)) return;
+
+        const diffs = getDiff(original, altered);
+        let highlightedHTML = [];
+        diffs.forEach(([op, text]) => {
+            if (op === DIFF_DELETE) {
+                highlightedHTML.push(`<span class="truth-ossifier-deleted" title="Deleted: ${text}">${text}</span>`);
+            } else if (op === DIFF_INSERT) {
+                highlightedHTML.push(`<span class="truth-ossifier-added" title="Added: ${text}">${text}</span>`);
+            } else {
+                highlightedHTML.push(text);
+            }
+        });
+
+        const wrapper = document.createElement('div');
+        wrapper.className = 'truth-ossifier-wrapper';
+        wrapper.innerHTML = `
+            <div class="truth-ossifier-badge" title="Truth Ossified: Alteration Detected">⚖️</div>
+            <div class="truth-ossifier-content">${highlightedHTML.join('')}</div>
+            <div class="truth-ossifier-actions">
+                <button class="truth-ossifier-view-original" data-original="${encodeURIComponent(original)}">View Original</button>
+                <button class="truth-ossifier-flag-fp" data-post-id="${postElement.id}">Flag False Positive</button>
+            </div>
+        `;
+        postElement.innerHTML = '';
+        postElement.appendChild(wrapper);
+
+        // Add event listeners
+        wrapper.querySelector('.truth-ossifier-view-original').addEventListener('click', (e) => {
+            alert(`Original: ${decodeURIComponent(e.target.dataset.original)}`);
+        });
+        wrapper.querySelector('.truth-ossifier-flag-fp').addEventListener('click', (e) => {
+            flagFalsePositive(e.target.dataset.postId);
+        });
+    }
+
+    // --- LOGGING ---
+    function logAlteration(postId, original, altered, platform, url) {
+        const data = {
+            postId: postId,
+            original: original,
+            altered: altered,
+            platform: platform,
+            url: url,
+            timestamp: new Date().toISOString()
+        };
+
+        // Log to public API
+        GM_xmlhttpRequest({
+            method: "POST",
+            url: LEDGER_API,
+            data: JSON.stringify(data),
+            headers: { "Content-Type": "application/json" },
+            onload: function(response) {
+                const result = JSON.parse(response.responseText);
+                console.log(`Logged to ledger: ${result.ipfs_hash}`);
+                // Optionally: Store IPFS hash in the DOM for reference
+            }
+        });
+    }
+
+    // --- FALSE POSITIVE FLAGGING ---
+    function flagFalsePositive(postId) {
+        falsePositives.add(postId);
+        GM_setValue("falsePositives", Array.from(falsePositives));
+        GM_xmlhttpRequest({
+            method: "POST",
+            url: FALSE_POSITIVE_API,
+            data: JSON.stringify({ postId: postId }),
+            headers: { "Content-Type": "application/json" }
+        });
+        // Remove highlighting for this post
+        const post = document.getElementById(postId);
+        if (post) {
+            post.innerHTML = post.textContent; // Reset to plain text
+        }
+    }
+
+    // --- MONITOR POSTS ---
+    function monitorPosts() {
+        // Facebook
+        if (window.location.hostname.includes('facebook.com')) {
+            const posts = document.querySelectorAll('div[data-ad-preview="message"]');
+            posts.forEach(post => {
+                const postId = post.id || `fb-${Math.random().toString(36).substr(2, 9)}`;
+                const postText = post.textContent.trim();
+                if (!originalPosts.has(postId)) {
+                    originalPosts.set(postId, { text: postText, element: post, timestamp: Date.now() });
+                } else {
+                    const original = originalPosts.get(postId).text;
+                    if (original !== postText) {
+                        const similarity = calculateSimilarity(original, postText);
+                        if (similarity < ALTERATION_THRESHOLD) {
+                            highlightAlteration(post, original, postText);
+                            logAlteration(postId, original, postText, 'facebook', window.location.href);
+                        }
+                    }
+                }
+            });
+        }
+        // Twitter
+        else if (window.location.hostname.includes('twitter.com')) {
+            const tweets = document.querySelectorAll('div[data-testid="tweetText"]');
+            tweets.forEach(tweet => {
+                const postId = tweet.closest('[data-testid="tweet"]').dataset.testid;
+                const postText = tweet.textContent.trim();
+                if (!originalPosts.has(postId)) {
+                    originalPosts.set(postId, { text: postText, element: tweet, timestamp: Date.now() });
+                } else {
+                    const original = originalPosts.get(postId).text;
+                    if (original !== postText) {
+                        const similarity = calculateSimilarity(original, postText);
+                        if (similarity < ALTERATION_THRESHOLD) {
+                            highlightAlteration(tweet, original, postText);
+                            logAlteration(postId, original, postText, 'twitter', window.location.href);
+                        }
+                    }
+                }
+            });
+        }
+        // Reddit
+        else if (window.location.hostname.includes('reddit.com')) {
+            const posts = document.querySelectorAll('div[class*="Post"]');
+            posts.forEach(post => {
+                const postId = post.id || `rd-${Math.random().toString(36).substr(2, 9)}`;
+                const postText = post.querySelector('div[class*="content"]')?.textContent.trim();
+                if (!postText) return;
+                if (!originalPosts.has(postId)) {
+                    originalPosts.set(postId, { text: postText, element: post, timestamp: Date.now() });
+                } else {
+                    const original = originalPosts.get(postId).text;
+                    if (original !== postText) {
+                        const similarity = calculateSimilarity(original, postText);
+                        if (similarity < ALTERATION_THRESHOLD) {
+                            highlightAlteration(post.querySelector('div[class*="content"]'), original, postText);
+                            logAlteration(postId, original, postText, 'reddit', window.location.href);
+                        }
+                    }
+                }
+            });
+        }
+    }
+
+    // --- SIMILARITY CALCULATION ---
+    function calculateSimilarity(text1, text2) {
+        const dmp = new DiffMatchPatch();
+        const diffs = dmp.diff_main(text1, text2);
+        dmp.diff_cleanupSemantic(diffs);
+        const changes = diffs.filter(([op]) => op !== DIFF_EQUAL).length;
+        const total = diffs.length;
+        return 1 - (changes / total);
+    }
+
+    // --- STYLES ---
+    function addStyles() {
+        const style = document.createElement('style');
+        style.textContent = `
+            .truth-ossifier-wrapper {
+                position: relative;
+                border-left: 3px solid #ffcc00;
+                padding-left: 10px;
+                margin: 5px 0;
+            }
+            .truth-ossifier-badge {
+                position: absolute;
+                top: 0;
+                right: 0;
+                background: #ffcc00;
+                color: black;
+                border-radius: 50%;
+                width: 20px;
+                height: 20px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 12px;
+                cursor: help;
+            }
+            .truth-ossifier-deleted {
+                background-color: #ffcccc;
+                text-decoration: line-through;
+            }
+            .truth-ossifier-added {
+                background-color: #ccffcc;
+                font-weight: bold;
+            }
+            .truth-ossifier-actions {
+                margin-top: 5px;
+                display: flex;
+                gap: 5px;
+            }
+            .truth-ossifier-actions button {
+                background: #ffcc00;
+                border: none;
+                padding: 2px 5px;
+                border-radius: 3px;
+                cursor: pointer;
+                font-size: 12px;
+            }
+        `;
+        document.head.appendChild(style);
+    }
+
+    // --- INIT ---
+    addStyles();
+    setInterval(monitorPosts, 2000); // Check every 2 seconds
+})();
