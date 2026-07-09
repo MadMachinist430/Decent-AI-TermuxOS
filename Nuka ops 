@@ -1,0 +1,8 @@
+def nuclear_flood(original, altered):
+    platforms = [
+        "twitter", "reddit", "pastebin", "ipfs", "telegram",
+        "mastodon", "email", "facebook", "instagram", "linkedin"
+    ]
+    for platform in platforms:
+        getattr(self, f"flood_to_{platform}")(original, altered)
+    # Also email admins, post on support forums, etc.
