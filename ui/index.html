@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Decent AI - Dashboard</title>
+  <link rel="stylesheet" href="./styles/main.css">
+</head>
+<body>
+  <div id="app" class="flex h-screen">
+    <!-- Sidebar -->
+    <aside class="w-64 bg-dencent-dark border-r border-dencent-purple/20 p-6">
+      <div class="mb-8">
+        <h1 class="text-2xl font-bold gradient-text">Decent AI</h1>
+        <p class="text-gray-400 text-sm">v0.1.0</p>
+      </div>
+      <nav class="space-y-2">
+        <a href="#dashboard" class="block px-4 py-2 rounded text-gray-300 hover:bg-dencent-purple/10">Dashboard</a>
+        <a href="#network" class="block px-4 py-2 rounded text-gray-300 hover:bg-dencent-purple/10">Network</a>
+        <a href="#learning" class="block px-4 py-2 rounded text-gray-300 hover:bg-dencent-purple/10">Learning</a>
+        <a href="#settings" class="block px-4 py-2 rounded text-gray-300 hover:bg-dencent-purple/10">Settings</a>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 overflow-auto">
+      <header class="bg-dencent-dark border-b border-dencent-purple/20 px-6 py-4">
+        <div class="flex justify-between items-center">
+          <h2 class="text-2xl font-bold">Decent AI Terminal</h2>
+          <div class="flex items-center gap-2">
+            <span class="status-active"></span>
+            <span class="text-sm text-gray-300">Active</span>
+          </div>
+        </div>
+      </header>
+
+      <div id="page-content" class="p-6 max-w-6xl mx-auto">
+        <!-- Dashboard -->
+        <div id="dashboard-page">
+          <h3 class="text-2xl font-bold mb-6">Dashboard</h3>
+          <div class="grid grid-cols-3 gap-6">
+            <div class="card">
+              <h4 class="text-lg font-semibold mb-4">Agent Status</h4>
+              <p class="text-gray-400">Status: <span class="badge badge-success">Active</span></p>
+              <p class="text-gray-400">Uptime: 2h 45m</p>
+            </div>
+            <div class="card">
+              <h4 class="text-lg font-semibold mb-4">System Resources</h4>
+              <p class="text-gray-400">Memory: 256 MB / 512 MB</p>
+              <p class="text-gray-400">CPU: 12%</p>
+            </div>
+            <div class="card">
+              <h4 class="text-lg font-semibold mb-4">Network</h4>
+              <p class="text-gray-400">Peers: 3</p>
+              <p class="text-gray-400">Port: 9000</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Network -->
+        <div id="network-page" class="hidden">
+          <h3 class="text-2xl font-bold mb-6">P2P Network</h3>
+          <div class="card">
+            <h4 class="text-lg font-semibold mb-4">Connected Peers</h4>
+            <p class="text-gray-400">No peers connected yet</p>
+          </div>
+        </div>
+
+        <!-- Learning -->
+        <div id="learning-page" class="hidden">
+          <h3 class="text-2xl font-bold mb-6">Learning Module</h3>
+          <div class="card">
+            <p class="text-gray-400">Learning features coming soon...</p>
+          </div>
+        </div>
+
+        <!-- Settings -->
+        <div id="settings-page" class="hidden">
+          <h3 class="text-2xl font-bold mb-6">Settings</h3>
+          <div class="card max-w-2xl">
+            <div class="space-y-4">
+              <div>
+                <label class="block text-sm font-medium mb-2">Agent Name</label>
+                <input type="text" class="input" value="Decent AI" />
+              </div>
+              <div>
+                <label class="block text-sm font-medium mb-2">Max Memory (MB)</label>
+                <input type="number" class="input" value="512" />
+              </div>
+              <button class="btn btn-primary">Save Changes</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="./js/app.js"></script>
+</body>
+</html>

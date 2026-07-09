@@ -1,0 +1,50 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-dencent-darker text-gray-100;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply text-gray-100;
+  }
+}
+
+@layer components {
+  .card {
+    @apply bg-dencent-dark border border-dencent-purple/20 rounded-lg p-6 shadow-lg;
+  }
+  
+  .btn {
+    @apply px-4 py-2 rounded-lg font-medium transition-all cursor-pointer;
+  }
+  
+  .btn-primary {
+    @apply btn bg-dencent-blue hover:bg-dencent-blue/80 text-white;
+  }
+  
+  .btn-secondary {
+    @apply btn bg-dencent-purple/20 border border-dencent-purple text-dencent-purple;
+  }
+  
+  .input {
+    @apply w-full bg-dencent-darker border border-dencent-purple/20 rounded-lg px-4 py-2 text-gray-100;
+  }
+  
+  .badge {
+    @apply inline-block px-3 py-1 rounded-full text-sm font-medium;
+  }
+  
+  .badge-success {
+    @apply badge bg-green-500/20 text-green-400;
+  }
+  
+  .status-dot {
+    @apply inline-block w-3 h-3 rounded-full;
+  }
+  
+  .status-active {
+    @apply status-dot bg-green-500 animate-pulse;
+  }
+}
