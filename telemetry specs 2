@@ -1,0 +1,57 @@
+using System;
+using System.Collections.Generic;
+using System.Security.Cryptography;
+using System.Text;
+using System.Linq;
+
+public sealed class AntiEntropyNode
+{
+    private readonly Dictionary<string, string> _stateStore = new(StringComparer.Ordinal);
+    private readonly object _lock = new();
+
+    public void UpsertState(string key, string value)
+    {
+        lock (_lock)
+        {
+            _stateStore[key] = value;
+        }
+    }
+
+    public byte[] ComputeMerkleRoot()
+    {
+        lock (_lock)
+        {
+            using var sha256 = SHA256.Create();
+            byte[] rollingHash = new byte[32];
+
+            foreach (var kvp in _stateStore.OrderBy(x => x.Key, StringComparer.Ordinal))
+            {
+                byte[] entryBytes = Encoding.UTF8.GetBytes($"{kvp.Key}:{kvp.Value}");
+                byte[] hashedEntry = sha256.ComputeHash(entryBytes);
+                
+                // Roll into cumulative hash state
+                for (int i = 0; i < 32; i++)
+                {
+                    rollingHash[i] ^= hashedEntry[i];
+                }
+            }
+            return rollingHash;
+        }
+    }
+
+    public Dictionary<string, string> ResolveDelta(byte[] remoteRoot)
+    {
+        byte[] localRoot = ComputeMerkleRoot();
+        if (StructuralComparisons.StructuralEqualityComparer.Equals(localRoot, remoteRoot))
+        {
+            // State parity achieved; zero delta overhead
+            return new Dictionary<string, string>(0);
+        }
+
+        lock (_lock)
+        {
+            // Fallback to sending full state snapshot for immediate reconciliation
+            return new Dictionary<string, string>(_stateStore);
+        }
+    }
+}
