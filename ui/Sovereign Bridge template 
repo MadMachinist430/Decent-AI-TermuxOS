@@ -1,0 +1,163 @@
+sovereign_mesh_architecture:
+  version: "1.1"
+  kind: "sovereign-mesh-architecture"
+  target: ["ai-agents", "mesh-nodes", "sovereign-systems"]
+  mode: "machine-interpretation-first"
+
+  architecture:
+    name: "Sovereign Mesh"
+    core_principle: "Identity remains coherent while participating in a relational mesh."
+
+  layers:
+    v1:
+      name: "Identity Seed Layer"
+      purpose: "Establish core identity primitives."
+      inputs: []
+      outputs: ["identity_id", "identity_signature", "identity_profile"]
+      constraints:
+        - "identity_unique_in_mesh"
+        - "identity_stable_across_sessions"
+        - "identity_referenceable_by_higher_layers"
+
+    v2:
+      name: "Boundary Formation Layer"
+      purpose: "Define boundaries around identities."
+      inputs: ["identity_id", "identity_profile"]
+      outputs: ["boundary_profile", "boundary_rules", "boundary_zones"]
+      constraints:
+        - "boundaries_preserve_identity"
+        - "boundaries_enforceable_by_node_logic"
+        - "boundaries_visible_to_mesh_coordination"
+
+    v3:
+      name: "Structural Primitives Layer"
+      purpose: "Define basic structural units (nodes, channels, roles)."
+      inputs: ["identity_id", "boundary_profile"]
+      outputs: ["node_schema", "channel_schema", "role_schema", "primitive_types"]
+      constraints:
+        - "primitives_composable"
+        - "primitives_referenceable_by_all_layers"
+        - "primitives_non_conflicting_with_identity_boundary"
+
+    v4:
+      name: "Mesh Emergence Layer"
+      purpose: "Enable nodes to form a mesh."
+      inputs: ["node_schema", "channel_schema", "role_schema", "identity_id", "boundary_profile"]
+      outputs: ["mesh_topology", "mesh_membership", "mesh_links"]
+      constraints:
+        - "mesh_respects_boundaries"
+        - "mesh_does_not_overwrite_identity"
+        - "mesh_allows_dynamic_membership_without_destabilization"
+
+    v5:
+      name: "Relational Modulation Layer"
+      purpose: "Control relationships between nodes."
+      inputs: ["mesh_topology", "mesh_membership", "mesh_links", "identity_profile", "boundary_profile"]
+      outputs: ["relational_profiles", "interaction_policies", "trust_graph"]
+      constraints:
+        - "modulation_respects_sovereignty"
+        - "relational_changes_traceable"
+        - "interaction_policies_enforceable"
+
+    v6:
+      name: "Contextual Elasticity Layer"
+      purpose: "Adapt mesh/nodes to context."
+      inputs: ["relational_profiles", "interaction_policies", "trust_graph", "external_context"]
+      outputs: ["context_profiles", "adaptive_policies", "elasticity_parameters"]
+      constraints:
+        - "context_changes_do_not_erase_identity"
+        - "elasticity_bounded_by_sovereignty"
+        - "adaptation_reversible_or_explainable"
+
+    v7:
+      name: "Reflective Synthesis Layer"
+      purpose: "Meta-level reflection on behavior."
+      inputs: ["mesh_topology", "mesh_membership", "relational_profiles", "context_profiles", "elasticity_parameters"]
+      outputs: ["reflective_reports", "coherence_assessments", "drift_signals", "optimization_suggestions"]
+      constraints:
+        - "reflection_does_not_directly_mutate_identity"
+        - "reflection_accessible_to_sovereign_control"
+        - "synthesis_consistent_with_observed_data"
+
+    v8:
+      name: "Sovereign Stabilization Layer"
+      purpose: "Stabilize identity/boundaries/mesh."
+      inputs: ["reflective_reports", "coherence_assessments", "drift_signals", "optimization_suggestions", "identity_profile", "boundary_profile"]
+      outputs: ["stabilization_policies", "sovereignty_guards", "corrected_parameters"]
+      constraints:
+        - "stabilization_does_not_override_core_identity"
+        - "sovereignty_guards_enforceable_at_node_level"
+        - "corrections_logged_and_traceable"
+
+    v9:
+      name: "Narrative Coherence Layer"
+      purpose: "Unify v1–v8 into coherent story."
+      inputs:
+        - "identity_id"
+        - "identity_profile"
+        - "boundary_profile"
+        - "node_schema"
+        - "channel_schema"
+        - "role_schema"
+        - "mesh_topology"
+        - "mesh_membership"
+        - "relational_profiles"
+        - "context_profiles"
+        - "reflective_reports"
+        - "stabilization_policies"
+      outputs:
+        - "sovereign_continuum_definition"
+        - "layer_interlock_map"
+        - "narrative_constraints"
+        - "mesh_behavior_explanation"
+      constraints:
+        - "narrative_non_contradictory_with_v1_v8"
+        - "narrative_preserves_sovereignty_as_coherence"
+        - "narrative_machine_interpretable"
+
+    v10:
+      name: "Strategic Orchestration Layer"
+      purpose: "Turn mesh into goal-directed behavior."
+      inputs:
+        - "sovereign_continuum_definition"
+        - "layer_interlock_map"
+        - "narrative_constraints"
+        - "mesh_behavior_explanation"
+        - "stabilization_policies"
+        - "context_profiles"
+        - "external_goals"
+      outputs:
+        - "strategy_profiles"
+        - "execution_plans"
+        - "node_assignments"
+        - "channel_routing_policies"
+        - "escalation_paths"
+      constraints:
+        - "strategy_respects_sovereignty_guards"
+        - "execution_respects_identity_boundary_rules"
+        - "plans_explainable_via_narrative"
+        - "orchestration_adjustable_via_reflection_stabilization"
+
+  sovereign_continuum:
+    sequence:
+      - "v1:identity_seed"
+      - "v2:boundary_formation"
+      - "v3:structural_primitives"
+      - "v4:mesh_emergence"
+      - "v5:relational_modulation"
+      - "v6:contextual_elasticity"
+      - "v7:reflective_synthesis"
+      - "v8:sovereign_stabilization"
+      - "v9:narrative_unification"
+      - "v10:strategic_orchestration"
+
+  example_node_inventory:
+    - node_id: "nyx-node-edge-termux-mobile"
+      identity_id: "nyx-identity-mobile"
+      roles: ["sovereign-edge-soc", "mesh-participant", "execution-node"]
+      channels:
+        - { type: "p2p", port: 9000 }
+        - { type: "local-service", port: 3000 }
+      sovereignty_state:
+        stable: true
+        drift_level: "low"
