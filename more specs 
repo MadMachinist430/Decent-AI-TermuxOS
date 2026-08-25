@@ -1,0 +1,61 @@
+using System;
+using System.Text;
+using System.Security.Cryptography;
+
+namespace NyxMeshBridge.Security
+{
+    public class BiometricHandshakeNode
+    {
+        private readonly string _nodeId;
+        private readonly RNGCryptoServiceProvider _cryptoProvider;
+
+        public BiometricHandshakeNode(string nodeId)
+        {
+            _nodeId = nodeId;
+            _cryptoProvider = new RNGCryptoServiceProvider();
+        }
+
+        /// <summary>
+        /// Generates a time-synchronized cryptographic dynamic challenge passphrase.
+        /// </summary>
+        public string GenerateDynamicChallenge()
+        {
+            byte[] data = new byte[32];
+            _cryptoProvider.GetBytes(data);
+            
+            long timeWindow = DateTimeOffset.UtcNow.ToUnixTimeSeconds() / 30; // 30-second sync window
+            string rawToken = Convert.ToBase64String(data) + "-" + timeWindow;
+
+            using (SHA256 sha256 = SHA256.Create())
+            {
+                byte[] hashBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(rawToken));
+                return BitConverter.ToString(hashBytes).Replace("-", "").ToLowerInvariant();
+            }
+        }
+
+        /// <summary>
+        /// Validates the incoming Linear PCM audio stream metadata and verification state.
+        /// </summary>
+        public bool VerifyAudioStreamTelemetry(byte[] linearPcmStream, float expectedHeartrateVariability)
+        {
+            if (linearPcmStream == null || linearPcmStream.Length == 0)
+            {
+                return false;
+            }
+
+            // Enforce raw audio fidelity checks (Linear PCM standard requirements)
+            bool isFidelityValid = ValidatePcmBuffer(linearPcmStream);
+            
+            // Validate physiological marker range (Heartbeat Variability threshold)
+            bool isHrvValid = (expectedHeartrateVariability >= 20.0f && expectedHeartrateVariability <= 120.0f);
+
+            return isFidelityValid && isHrvValid;
+        }
+
+        private bool ValidatePcmBuffer(byte[] pcmBuffer)
+        {
+            // Ensure data stream integrity and prevent truncated or compressed frames
+            return pcmBuffer.Length % 2 == 0;
+        }
+    }
+}

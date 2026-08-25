@@ -1,0 +1,17 @@
+public string GenerateSignedChallenge(byte[] privateKey)
+{
+    string challenge = GenerateDynamicChallenge();
+    byte[] signature = SignData(Encoding.UTF8.GetBytes(challenge), privateKey);
+    return $"{challenge}.{Convert.ToBase64String(signature)}";
+}
+
+public bool VerifySignedChallenge(string signedChallenge, byte[] publicKey)
+{
+    string[] parts = signedChallenge.Split('.');
+    if (parts.Length != 2) return false;
+
+    string challenge = parts[0];
+    byte[] signature = Convert.FromBase64String(parts[1]);
+
+    return VerifySignature(Encoding.UTF8.GetBytes(challenge), signature, publicKey);
+}
