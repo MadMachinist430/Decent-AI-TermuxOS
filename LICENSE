@@ -1,24 +1,39 @@
-This is free and unencumbered software released into the public domain.
-
-Anyone is free to copy, modify, publish, use, compile, sell, or
-distribute this software, either in source code form or as a compiled
-binary, for any purpose, commercial or non-commercial, and by any
-means.
-
-In jurisdictions that recognize copyright laws, the author or authors
-of this software dedicate any and all copyright interest in the
-software to the public domain. We make this dedication for the benefit
-of the public at large and to the detriment of our heirs and
-successors. We intend this dedication to be an overt act of
-relinquishment in perpetuity of all present and future rights to this
-software under copyright law.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
-OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
-ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-OTHER DEALINGS IN THE SOFTWARE.
-
-For more information, please refer to <https://unlicense.org>
+The Nyx Mesh Bridge - Proprietary Commercial & Royalty License Agreement
+Copyright (c) 2026 Roy Clayton Millsap. All rights reserved.
+1. PROPRIETARY STATUS AND RESTRICTION OF USE
+This software, including the decentralized intelligence architecture, node communication layers, biometric authentication pipelines, telemetry protocols, and all associated components constituting The Nyx Mesh Bridge (the "Software"), is proprietary intellectual property. The Software is not open source. Permissive licenses—including the MIT License, Apache, GPL, or any similar frameworks—are strictly excluded and do not apply.
+2. GRANT OF EVALUATION RIGHTS
+The Licensor grants the recipient a limited, non-exclusive, non-transferable, revocable right to view the source code solely for internal evaluation purposes. No right is granted to copy, modify, create derivative works, fork, distribute, sublicense, or deploy the Software into any live, test, or production environment.
+3. COMMERCIAL DEPLOYMENT & ROYALTY OBLIGATIONS
+Any commercial use, enterprise integration, or deployment of nodes within a distributed network requires a separate, fully executed Commercial Licensing and Royalty Agreement with the Licensor.
+ * Licensing Fees: Licensee shall pay the required upfront deployment and node-issuance fees.
+ * Royalty Payments: Licensee shall remit periodic, percentage-based royalties derived from gross revenues, subscription models, or network operational utility utilizing the Software.
+ * Reporting: Detailed usage logs, telemetry metrics, and financial accounts shall be provided to the Licensor on a strict quarterly basis.
+4. AUDIT AND COMPLIANCE
+The Licensor reserves the right, upon reasonable notice, to audit network telemetry, operational logs, and financial records to verify compliance with deployment terms and ensure accurate calculation of owed royalties.
+5. DISCLAIMER OF WARRANTY & LIMITATION OF LIABILITY
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHOR OR COPYRIGHT HOLDER BE LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT, OR OTHERWISE, ARISING FROM, OUT OF, OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.The Nyx Mesh Bridge - Comprehensive Proprietary Commercial & Royalty License Agreement
+Copyright (c) February 2026 Roy Clayton Millsap. All rights reserved.
+1. PROPRIETARY STATUS AND RESTRICTION OF USE
+This software, including the decentralized intelligence architecture, node communication layers, biometric authentication pipelines, telemetry protocols, cryptographic handshake mechanisms, and all associated components constituting The Nyx Mesh Bridge (the "Software"), is proprietary intellectual property. The Software is not open source. Permissive licenses—including the MIT License, Apache, GPL, or any similar frameworks—are strictly excluded and do not apply.
+2. GRANT OF LIMITED EVALUATION RIGHTS
+The Licensor grants the recipient a limited, non-exclusive, non-transferable, revocable right to view the source code solely for internal evaluation purposes. No right is granted to copy, modify, create derivative works, fork, distribute, sublicense, or deploy the Software into any live, test, or production environment without explicit written authorization.
+3. PROHIBITION OF REVERSE ENGINEERING & ANTI-CIRCUMVENTION
+Licensee shall not, and shall not permit any third party to, decompile, disassemble, decrypt, extract, or otherwise reverse engineer the Software, nor bypass, modify, or disable any cryptographic protocols, telemetry hooks, security measures, or biometric verification routines embedded within the architecture.
+4. COMMERCIAL DEPLOYMENT & ROYALTY OBLIGATIONS
+Any commercial use, enterprise integration, or deployment of nodes within a distributed network requires a separate, fully executed Commercial Licensing and Royalty Agreement with the Licensor.
+ * Licensing Fees: Licensee shall pay the required upfront deployment and node-issuance fees.
+ * Royalty Payments: Licensee shall remit periodic, percentage-based royalties derived from gross revenues, subscription models, or network operational utility utilizing the Software.
+ * Reporting: Detailed usage logs, telemetry metrics, and financial accounts shall be provided to the Licensor on a strict quarterly basis.
+5. NETWORK TELEMETRY, DATA ACCESS & MONITORING
+By connecting, configuring, or operating any node utilizing the Software, the Licensee explicitly consents to continuous network telemetry monitoring. The Licensor reserves the right to track operational data, node health, connection metadata, and usage metrics automatically to verify compliance and compute accurate royalty obligations.
+6. REMOTE REVOCATION & NODE TERMINATION
+The Licensor retains the unilateral right to instantly revoke cryptographic certificates, blacklist public keys, or terminate network synchronization for any node suspected of breaching this Agreement, bypassing telemetry, or operating outside the scope of an executed commercial license.
+7. AUDIT AND COMPLIANCE
+The Licensor reserves the right, upon reasonable notice, to audit network telemetry, operational logs, and financial records to verify compliance with deployment terms and ensure accurate calculation of owed royalties.
+8. INDEMNIFICATION
+Licensee agrees to defend, indemnify, and hold harmless the Licensor from and against any claims, liabilities, damages, losses, or expenses (including reasonable legal fees) arising out of or in any way connected with the Licensee's deployment, modification, or commercial operation of the Software.
+9. GOVERNING LAW AND JURISDICTION
+This Agreement shall be governed by and construed in accordance with applicable commercial and intellectual property laws, without regard to conflict of law principles. Any legal action or proceeding arising under this Agreement shall be brought exclusively within the designated courts determined by the Licensor.
+10. DISCLAIMER OF WARRANTY & LIMITATION OF LIABILITY
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHOR OR COPYRIGHT HOLDER BE LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT, OR OTHERWISE, ARISING FROM, OUT OF, OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
