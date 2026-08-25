@@ -1,0 +1,39 @@
+using System;
+using System.Text;
+using System.Security.Cryptography;
+
+namespace NyxMeshBridge.Security
+{
+    public class BiometricHandshakeNode
+    {
+        private readonly string _nodeId;
+        private readonly RNGCryptoServiceProvider _cryptoProvider;
+
+        public BiometricHandshakeNode(string nodeId)
+        {
+            _nodeId = nodeId;
+            _cryptoProvider = new RNGCryptoServiceProvider();
+        }
+
+        public string GenerateDynamicChallenge()
+        {
+            byte[] data = new byte[32];
+            _cryptoProvider.GetBytes(data);
+            
+            long timeWindow = DateTimeOffset.UtcNow.ToUnixTimeSeconds() / 30;
+            string rawToken = Convert.ToBase64String(data) + "-" + timeWindow;
+
+            using (SHA256 sha256 = SHA256.Create())
+            {
+                byte[] hashBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(rawToken));
+                return BitConverter.ToString(hashBytes).Replace("-", "").ToLowerInvariant();
+            }
+        }
+
+        public bool VerifyAudioStreamTelemetry(byte[] linearPcmStream, float expectedHeartrateVariability)
+        {
+            if (linearPcmStream == null || linearPcmStream.Length == 0) return false;
+            return (linearPcmStream.Length % 2 == 0) && (expectedHeartrateVariability >= 20.0f && expectedHeartrateVariability <= 120.0f);
+        }
+    }
+}
