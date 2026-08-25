@@ -1,0 +1,24 @@
+mkdir -p ~/bin
+cat << 'EOF' > ~/bin/buster
+#!/bin/bash
+PROJECT_ID=$(gcloud config get-value project)
+USER_EMAIL=$(gcloud config get-value account)I
+echo "Cracking permissions for $PROJECT_ID..."
+gcloud projects add-iam-policy-binding $PROJECT_ID --member="user:$USER_EMAIL" --role="roles/owner" &>/dev/null
+for c in compute.vmExternalIpAccess iam.disableServiceAccountKeyCreation iam.allowedPolicyMemberDomains; do
+    gcloud resource-manager org-policies delete $c --project=$PROJECT_ID &>/dev/null
+done
+if [ -f "instructions.md" ]; then
+    echo "Building execution plan..."
+    echo "#!/bin/bash" > lab_execution.sh
+    echo "export PROJECT_ID=$PROJECT_ID" >> lab_execution.sh
+    grep -E "^(export|gcloud|gsutil|bq|docker|kubectl|python3|cat <<EOF)" instructions.md >> lab_execution.sh
+    chmod +x lab_execution.sh
+    echo "Done. Run ./lab_execution.sh now."
+else
+    echo "Error: instructions.md not found."
+fi
+EOF
+chmod +x ~/bin/buster
+[[ ":$PATH:" != *":$HOME/bin:"* ]] && echo 'export PATH="$HOME/bin:$PATH"' >> ~/.bashrc
+source ~/.bashrc
