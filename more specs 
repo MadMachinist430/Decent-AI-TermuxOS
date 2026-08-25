@@ -58,4 +58,4 @@ namespace NyxMeshBridge.Security
             return pcmBuffer.Length % 2 == 0;
         }
     }
-}
+} 
