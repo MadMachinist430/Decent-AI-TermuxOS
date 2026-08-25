@@ -1,0 +1,74 @@
+using System;
+using System.IO.Pipelines;
+using System.Security.Cryptography;
+using System.Threading;
+using System.Threading.Tasks;
+
+public sealed class MeshTransport
+{
+    private readonly byte[] _sessionKey;
+
+    public MeshTransport(byte[] sessionKey)
+    {
+        if (sessionKey.Length != 32) throw new ArgumentException("Key must be 32 bytes for ChaCha20.");
+        _sessionKey = sessionKey;
+    }
+
+    public async Task WritePayloadAsync(PipeWriter writer, byte[] plaintext, CancellationToken ct)
+    {
+        byte[] nonce = RandomNumberGenerator.GetBytes(12);
+        byte[] ciphertext = new byte[plaintext.Length];
+        byte[] tag = new byte[16];
+
+        using var chacha = new ChaCha20Poly1305(_sessionKey);
+        chacha.Encrypt(nonce, plaintext, ciphertext, tag);
+
+        // Frame format: [Nonce (12)] [Tag (16)] [Length (4)] [Ciphertext]
+        var span = writer.GetSpan(12 + 16 + 4 + ciphertext.Length);
+        
+        nonce.CopyTo(span);
+        tag.CopyTo(span[12..]);
+        BitConverter.TryWriteBytes(span[28..32], ciphertext.Length);
+        ciphertext.CopyTo(span[32..]);
+
+        writer.Advance(32 + ciphertext.Length);
+        await writer.FlushAsync(ct);
+    }
+
+    public async Task<byte[]> ReadPayloadAsync(PipeReader reader, CancellationToken ct)
+    {
+        while (true)
+        {
+            ReadResult result = await reader.ReadAsync(ct);
+            ReadOnlySequence<byte> buffer = result.Buffer;
+
+            if (buffer.Length < 32)
+            {
+                reader.AdvanceTo(buffer.Start, buffer.End);
+                if (result.IsCompleted) throw new InvalidOperationException("Incomplete frame.");
+                continue;
+            }
+
+            // Slice out header components
+            byte[] nonce = buffer.Slice(0, 12).ToArray();
+            byte[] tag = buffer.Slice(12, 16).ToArray();
+            int dataLen = BitConverter.ToInt32(buffer.Slice(28, 4).ToArray());
+            
+            long totalFrameSize = 32 + dataLen;
+            if (buffer.Length < totalFrameSize)
+            {
+                reader.AdvanceTo(buffer.Start, buffer.End);
+                continue;
+            }
+
+            byte[] ciphertext = buffer.Slice(32, dataLen).ToArray();
+            byte[] plaintext = new byte[dataLen];
+
+            using var chacha = new ChaCha20Poly1305(_sessionKey);
+            chacha.Decrypt(nonce, ciphertext, tag, plaintext);
+
+            reader.AdvanceTo(buffer.GetPosition(totalFrameSize));
+            return plaintext;
+        }
+    }
+}
